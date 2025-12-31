@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言上一章节我们完成了STM32最基本的工程搭建，并完成了下载本章节我们将实现开始尝试修改自己的STM32工程，实现包括串口、定时器等功能 串口串口的概念这个东西叫串口，也叫UART或者USART，他是实现单片机交互数据的一种方式，可以给你的电脑提供数据交互。  观察他的接口上会写着TX（transmit）与RX（receive）两个引脚，分别是他的嘴巴（TX）和他的耳朵（RX），显而易见的是如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【STM32入门教学】——串口、定时器与参考资料">
+<meta property="og:url" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/index.html">
+<meta property="og:site_name" content="Mr.NoFish">
+<meta property="og:description" content="前言上一章节我们完成了STM32最基本的工程搭建，并完成了下载本章节我们将实现开始尝试修改自己的STM32工程，实现包括串口、定时器等功能 串口串口的概念这个东西叫串口，也叫UART或者USART，他是实现单片机交互数据的一种方式，可以给你的电脑提供数据交互。  观察他的接口上会写着TX（transmit）与RX（receive）两个引脚，分别是他的嘴巴（TX）和他的耳朵（RX），显而易见的是如">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/intro.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/ch340.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/cubemx_01.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/keil_01.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/device.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/xcom.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/doc_01.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/keil_02.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/keil_03.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/keil_04.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/keil_05.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/keil_06.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/cubemx_02.png">
+<meta property="og:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/cubemx_03.png">
+<meta property="article:published_time" content="2024-07-04T08:18:51.000Z">
+<meta property="article:modified_time" content="2025-12-31T08:02:28.504Z">
+<meta property="article:author" content="Haoqi Han">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/07/04/posts_tutorial_stm32_02/intro.png">
+
+
+<link rel="canonical" href="http://example.com/2024/07/04/posts_tutorial_stm32_02/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/07/04/posts_tutorial_stm32_02/","path":"2024/07/04/posts_tutorial_stm32_02/","title":"【STM32入门教学】——串口、定时器与参考资料"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【STM32入门教学】——串口、定时器与参考资料 | Mr.NoFish</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Mr.NoFish</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%B2%E5%8F%A3"><span class="nav-number">2.</span> <span class="nav-text">串口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B2%E5%8F%A3%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">串口的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cubemx"><span class="nav-number">2.2.</span> <span class="nav-text">cubemx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keil5"><span class="nav-number">2.3.</span> <span class="nav-text">keil5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%89%A9%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.4.</span> <span class="nav-text">实物实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Ecubemx%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91"><span class="nav-number">2.5.</span> <span class="nav-text">关于cubemx生成逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#printf%E5%8D%87%E7%BA%A7"><span class="nav-number">2.6.</span> <span class="nav-text">printf升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#usart-c"><span class="nav-number">2.7.</span> <span class="nav-text">usart.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-h"><span class="nav-number">2.8.</span> <span class="nav-text">main.h</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#retarget-c"><span class="nav-number">2.9.</span> <span class="nav-text">retarget.c</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Ekeil%E5%B7%A5%E7%A8%8B%E6%A0%91"><span class="nav-number">2.10.</span> <span class="nav-text">关于keil工程树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">3.1.</span> <span class="nav-text">定时器的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cubemx-1"><span class="nav-number">3.2.</span> <span class="nav-text">cubemx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stm32f4xx-it-c"><span class="nav-number">3.3.</span> <span class="nav-text">stm32f4xx_it.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">关于参考资料</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">参考库文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C"><span class="nav-number">4.2.</span> <span class="nav-text">参考数据手册</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B7%E4%BE%8B%E5%B7%A5%E7%A8%8B"><span class="nav-number">4.3.</span> <span class="nav-text">样例工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%88%AB%E4%BA%BA%E7%9A%84%E5%B7%A5%E7%A8%8B"><span class="nav-number">4.4.</span> <span class="nav-text">参考别人的工程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Haoqi Han</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/04/posts_tutorial_stm32_02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Haoqi Han">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【STM32入门教学】——串口、定时器与参考资料 | Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【STM32入门教学】——串口、定时器与参考资料
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-07-04 16:18:51" itemprop="dateCreated datePublished" datetime="2024-07-04T16:18:51+08:00">2024-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 16:02:28" itemprop="dateModified" datetime="2025-12-31T16:02:28+08:00">2025-12-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><img src="/2024/07/04/posts_tutorial_stm32_02/intro.png" alt="intro"></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一章节我们完成了STM32最基本的工程搭建，并完成了下载<br>本章节我们将实现开始尝试修改自己的STM32工程，实现包括串口、定时器等功能</p>
+<h1 id="串口"><a href="#串口" class="headerlink" title="串口"></a>串口</h1><h2 id="串口的概念"><a href="#串口的概念" class="headerlink" title="串口的概念"></a>串口的概念</h2><p>这个东西叫串口，也叫UART或者USART，他是实现单片机交互数据的一种方式，可以给你的电脑提供数据交互。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/ch340.png" alt="ch340"></p>
+<p>观察他的接口上会写着TX（transmit）与RX（receive）两个引脚，分别是他的嘴巴（TX）和他的耳朵（RX），显而易见的是如果你希望让两个单片机进行交流，你需要让A设备的RX（耳朵）接上B的TX（嘴巴），而B设备的RX（耳朵）接上A的TX（嘴巴）</p>
+<h2 id="cubemx"><a href="#cubemx" class="headerlink" title="cubemx"></a>cubemx</h2><p>我们首先打开cubemx文件，选择Connectivity中的USART1，并设置模式为Asynchronous，观察到右侧PA9与PA10被设置为了USART1的RX与TX，点击生成代码</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/cubemx_01.png" alt="cubemx_01"></p>
+<h2 id="keil5"><a href="#keil5" class="headerlink" title="keil5"></a>keil5</h2><p>打开main.c文件，并在main文件中相应位置添加</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/keil_01.png" alt="keil_01"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/* USER CODE BEGIN 2 */</span></span><br><span class="line"><span class="type">uint8_t</span> usart1_tx_buf[] = <span class="string">&quot;Hello world\r\n&quot;</span>;</span><br><span class="line"> <span class="comment">/* USER CODE END 2 */</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">/* Infinite loop */</span></span><br><span class="line"> <span class="comment">/* USER CODE BEGIN WHILE */</span></span><br><span class="line"> <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line"> &#123;</span><br><span class="line">	HAL_UART_Transmit(&amp;huart1, usart1_tx_buf, <span class="keyword">sizeof</span>(usart1_tx_buf), <span class="number">0xffff</span>);</span><br><span class="line">	HAL_Delay(<span class="number">1000</span>);</span><br><span class="line">   <span class="comment">/* USER CODE END WHILE */</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">/* USER CODE BEGIN 3 */</span></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">/* USER CODE END 3 */</span></span><br></pre></td></tr></table></figure>
+
+<p>编译并下载</p>
+<h2 id="实物实验"><a href="#实物实验" class="headerlink" title="实物实验"></a>实物实验</h2><p>使用CH340进行串口通讯，用杜邦线，将RX接入PA9，TX接入PA10，记得接一下地线。</p>
+<table>
+<thead>
+<tr>
+<th>STM32F4</th>
+<th>CH340</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3V3</td>
+<td>3V3</td>
+<td>建议别接</td>
+</tr>
+<tr>
+<td>PA9</td>
+<td>RX</td>
+<td>通讯线</td>
+</tr>
+<tr>
+<td>PA10</td>
+<td>TX</td>
+<td>通讯线</td>
+</tr>
+<tr>
+<td>GND</td>
+<td>GND</td>
+<td>共地</td>
+</tr>
+</tbody></table>
+<p>打开设备管理器，如果你已经正常安装了各个驱动设备，你大概能看见一个CH340的接口，记住他的COM号</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/device.png" alt="device"></p>
+<p>打开XCOM，选择你的USB-Serial端口，按下单片机的RST按钮，你会观察到CH340的RX指示灯在闪烁，并打印出了单片机给外部发送的信息</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/xcom.png" alt="xcom"></p>
+<h2 id="关于cubemx生成逻辑"><a href="#关于cubemx生成逻辑" class="headerlink" title="关于cubemx生成逻辑"></a>关于cubemx生成逻辑</h2><p>cubemx的功能是为了帮助你完成大部分的底层逻辑配置，并为提供大量的库函数支持。</p>
+<p>通常cubemx会帮你修改你的工程和代码，考虑到用户和cubeMX修改的内容不同，所以文件做了区分，观察文件中又大量的USER CODE BEGIN与USER CODE END注释，实际上用户只可以编辑这个注释之内的内容，而注释之外的由cubemx进行编辑。</p>
+<h2 id="printf升级"><a href="#printf升级" class="headerlink" title="printf升级"></a>printf升级</h2><p>HAL_UART_Transmit();看起来不是很好用，我们会想能不能像平常写C语言一样简单地输出字符。</p>
+<p>首先打开usart.c，并在文件最下方加入</p>
+<h2 id="usart-c"><a href="#usart-c" class="headerlink" title="usart.c"></a>usart.c</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* USER CODE BEGIN 1 */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sendchar</span> <span class="params">(<span class="type">int</span> ch)</span>&#123;</span><br><span class="line">	HAL_UART_Transmit(&amp;huart1, (<span class="type">uint8_t</span>*)&amp;ch, <span class="number">1</span>, <span class="number">0xffff</span>);</span><br><span class="line">	<span class="keyword">return</span> ch;	</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* USER CODE END 1 */</span></span><br></pre></td></tr></table></figure>
+
+<p>以及main.h中加入</p>
+<h2 id="main-h"><a href="#main-h" class="headerlink" title="main.h"></a>main.h</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* USER CODE BEGIN Includes */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="comment">/* USER CODE END Includes */</span></span><br></pre></td></tr></table></figure>
+
+<p>在文件管理器增加retarget.c文件，并用文本编辑器加入下述文字</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/doc_01.png" alt="doc_01"></p>
+<h2 id="retarget-c"><a href="#retarget-c" class="headerlink" title="retarget.c"></a>retarget.c</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;rt_misc.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//#pragma import(__use_no_semihosting_swi)//ARM Compiler6²»¼戝import£¬¸ĎªςæµĄځªº¯ʽ</span></span><br><span class="line">__asm(<span class="string">&quot;.global __use_no_semihosting&quot;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span>  <span class="title function_">sendchar</span><span class="params">(<span class="type">int</span> ch)</span>;  <span class="comment">/* in Serial.c */</span></span><br><span class="line"><span class="comment">//extern int  getkey(void);      /* in Serial.c */</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">long</span> timeval;           <span class="comment">/* in Time.c   */</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">//struct __FILE &#123; int handle; /* Add whatever you need here */ &#125;;</span></span><br><span class="line">FILE __stdout;</span><br><span class="line">FILE __stdin;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> <span class="title function_">fputc</span><span class="params">(<span class="type">int</span> ch, FILE *f)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (sendchar(ch));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//int fgetc(FILE *f) &#123;</span></span><br><span class="line"><span class="comment">// return (sendchar(getkey()));  </span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> <span class="title function_">ferror</span><span class="params">(FILE *f)</span> &#123;</span><br><span class="line">  <span class="comment">/* Your implementation of ferror */</span></span><br><span class="line">  <span class="keyword">return</span> EOF;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="type">void</span> _ttywrch(<span class="type">int</span> ch) &#123;</span><br><span class="line">  sendchar (ch);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="type">void</span> _sys_exit(<span class="type">int</span> return_code) &#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">1</span>);    <span class="comment">/* endless loop */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>回到keil中，双击Application&#x2F;User&#x2F;Core，将retarget.c添加到工程中</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/keil_02.png" alt="keil_02"></p>
+<p>接下来你可以将while里的函数做一定替换，可以更加方便的完成通讯。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/* USER CODE BEGIN 2 */</span></span><br><span class="line"><span class="type">uint8_t</span> usart1_tx_buf[] = <span class="string">&quot;Hello world\r\n&quot;</span>;</span><br><span class="line"> <span class="comment">/* USER CODE END 2 */</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">/* Infinite loop */</span></span><br><span class="line"> <span class="comment">/* USER CODE BEGIN WHILE */</span></span><br><span class="line"> <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line"> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Hello World\r\n&quot;</span>);</span><br><span class="line">	<span class="comment">//HAL_UART_Transmit(&amp;huart1, usart1_tx_buf, sizeof(usart1_tx_buf), 0xffff);</span></span><br><span class="line">	HAL_Delay(<span class="number">1000</span>);</span><br><span class="line">   <span class="comment">/* USER CODE END WHILE */</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">/* USER CODE BEGIN 3 */</span></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">/* USER CODE END 3 */</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="关于keil工程树"><a href="#关于keil工程树" class="headerlink" title="关于keil工程树"></a>关于keil工程树</h2><p>听不懂的先滚去看一下C语言多文件编译。</p>
+<p>通常一个工程会有多个H文件与C文件，其中H文件定义了函数名称，C文件定义了函数实现。</p>
+<p>keil5中左侧工程树通常只添加C文件，点击工程树设置，这里你可以自定义自己的工程树，并增加相应的文件分类。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/keil_03.png" alt="keil_03"></p>
+<p>这时左侧会增加一个Hardware文件夹（虚拟的），对于自己的功能实现，可以按照这种思路去部署。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/keil_04.png" alt="keil_04"></p>
+<p>额外的，H文件通常并不会被加入工程树中，而通过Keil软件自身的C&#x2F;C++检索实现，点击魔术棒设置路径并添加相应的头文件地址，完善自己的工程。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/keil_05.png" alt="keil_05"></p>
+<p>此外，ST公司有推出自己的部分拓展功能库，点击CMSIS库进行设置。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/keil_06.png" alt="keil_06"></p>
+<p>这里提供了很多拓展功能库帮助，包括如DSP之类的，可以提供更快的数学库支持。</p>
+<h1 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h1><h2 id="定时器的概念"><a href="#定时器的概念" class="headerlink" title="定时器的概念"></a>定时器的概念</h2><p>比如你现在要看管一个锅炉，每一小时需要放气一次，放气的工作需要花费你一分钟。你会有以下几种情况</p>
+<ol>
+<li>你可以拿着一个计时器，每当计满一小时后，你去放一次气，这样每次放气的循环会维持在61分钟，长期这么做设备可能就会出现损坏。</li>
+<li>你可以估算下自己放气的时间，如果是一分钟的话，我用计时器计算59分钟，这样循环可以稳定在60分钟。</li>
+<li>你现在不止有放气的一个任务，你还需要加煤，还需要加水，还需要写报告，而且每个任务消耗的你时间是不确定的，可能是2分钟，可能是10分钟。为了更准确保证一小时放一次气，你决定选一个闹钟，每一小时提醒你做一轮工作。</li>
+</ol>
+<p>定时器的核心功能体现在可以保证任务按照一定频率的完成，实际上单片机运行过程中任务时长是不确定的，为了确定一个稳定的工作频率，定时器的引入是必须的。</p>
+<h2 id="cubemx-1"><a href="#cubemx-1" class="headerlink" title="cubemx"></a>cubemx</h2><p>选择Timers中的TIM11，勾选Activated。</p>
+<p>Prescaler中写为99，我们上一章设置主时钟为100Mhz，意味着单片机一刻时钟为0.01us，但通常高频会造成更高的能耗，因此需要根据实际需求进行降频并分配给子定时器。写为99实际为100，这是因为程序通常从0开始计数，因此100Mhz会被分频100转换为1Mhz，也就是1us作为时钟的一刻。</p>
+<p>Counter Period设置为999，这意味着我们计数1000则重新开始计数，也就意味着这个定时器每1ms就会自动刷新一次。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/cubemx_02.png" alt="cubemx_02"></p>
+<p>这还不够，定时器会单独在那运行，但他不会提醒你，因此选择NVIC Setting中，设置定时器中断开启，这样每1ms都会被提醒完成一次工作。</p>
+<p><img src="/2024/07/04/posts_tutorial_stm32_02/cubemx_03.png" alt="cubemx_03"></p>
+<p>不理解中断逻辑的罚把《编码》这本书抄一遍</p>
+<p>所以stm32中的中断实现，会体现在中断信号触发之后，中断向量表中跳转到相应的IRQHandler函数中，这部分函数被统一放置在stm32f4xx_it.c文件中，可以在这里完成中断回调任务</p>
+<h2 id="stm32f4xx-it-c"><a href="#stm32f4xx-it-c" class="headerlink" title="stm32f4xx_it.c"></a>stm32f4xx_it.c</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TIM1_TRG_COM_TIM11_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">/* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 0 */</span></span><br><span class="line">  <span class="type">static</span> <span class="type">uint32_t</span> counter;</span><br><span class="line">	</span><br><span class="line">	counter++;</span><br><span class="line">	<span class="keyword">if</span>(counter&gt;<span class="number">999</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Hello World\r\n&quot;</span>);</span><br><span class="line">		counter=<span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">		</span><br><span class="line">  <span class="comment">/* USER CODE END TIM1_TRG_COM_TIM11_IRQn 0 */</span></span><br><span class="line">  HAL_TIM_IRQHandler(&amp;htim11);</span><br><span class="line">  <span class="comment">/* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 1 */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* USER CODE END TIM1_TRG_COM_TIM11_IRQn 1 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除此之外，注意将中断开启函数添加到main中的初始化内容中，并关闭while中的printf</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/* USER CODE BEGIN 2 */</span></span><br><span class="line"><span class="type">uint8_t</span> usart1_tx_buf[] = <span class="string">&quot;Hello world\r\n&quot;</span>;</span><br><span class="line">HAL_TIM_Base_Start_IT(&amp;htim11);</span><br><span class="line"> <span class="comment">/* USER CODE END 2 */</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">/* Infinite loop */</span></span><br><span class="line"> <span class="comment">/* USER CODE BEGIN WHILE */</span></span><br><span class="line"> <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line"> &#123;</span><br><span class="line">	<span class="comment">//printf(&quot;Hello World\r\n&quot;);</span></span><br><span class="line">	<span class="comment">//HAL_UART_Transmit(&amp;huart1, usart1_tx_buf, sizeof(usart1_tx_buf), 0xffff);</span></span><br><span class="line">	HAL_Delay(<span class="number">1000</span>);</span><br><span class="line">   <span class="comment">/* USER CODE END WHILE */</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">/* USER CODE BEGIN 3 */</span></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">/* USER CODE END 3 */</span></span><br></pre></td></tr></table></figure>
+
+<p>利用定时器，你可以设置自己的循环任务功能</p>
+<h1 id="关于参考资料"><a href="#关于参考资料" class="headerlink" title="关于参考资料"></a>关于参考资料</h1><p>写到现在比较困惑的一个问题是，这些东西我怎么理解？有哪些功能？有哪些函数？通过ST官方文件我们可以做如下了解。</p>
+<h2 id="参考库文件"><a href="#参考库文件" class="headerlink" title="参考库文件"></a>参考库文件</h2><p>函数右键Go to the Definition可以进入库函数定义文件，可以阅读英文注释了解函数具体使用。</p>
+<h2 id="参考数据手册"><a href="#参考数据手册" class="headerlink" title="参考数据手册"></a>参考数据手册</h2><p>cubemx的Help-&gt;Docs&amp;Resources，会有大量的stm32数据手册，可以多多参考阅读。</p>
+<p><a target="_blank" rel="noopener" href="https://www.st.com/resource/en/user_manual/dm00105879-description-of-stm32f4-hal-and-lowlayer-drivers-stmicroelectronics.pdf">Description of STM32F4 HAL and low-layer drivers</a></p>
+<h2 id="样例工程"><a href="#样例工程" class="headerlink" title="样例工程"></a>样例工程</h2><p>除了上述文档，ST提供了相关的工程文件作为参考</p>
+<p>通常目录会放在C:\用户\STM32Cube\Repository</p>
+<p>其中的文件夹中有对应版本库的相关资料，包含了大部分HAL库与LL库的使用范例，就不用头疼的全网找资料了（一个个打开来看看吧）</p>
+<h2 id="参考别人的工程"><a href="#参考别人的工程" class="headerlink" title="参考别人的工程"></a>参考别人的工程</h2><p>学习学习别人的工作，了解了解别人如何应用设备芯片，可以帮助你更快的搭建自己的工程</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>单片机中串口是最简单的一种通讯策略，除了本章展现的数据发送功能，还有数据接收功能，但实现起来相较复杂。</p>
+<p>此外关于定时器，可以帮助你实现多任务循环功能，注意循环任务花费的时间是否会超过定时器的循环周期，这可能影响系统运行的稳定性。</p>
+<p>到此为止我们可以完成简单的循环任务搭建的效果，下一章我将简单介绍PWM与ADC的功能，我们将研究如何向外收集信号与驱动信号。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/04/posts_library_spi_master/" rel="prev" title="工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库">
+                  <i class="fa fa-angle-left"></i> 工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/07/04/posts_tutorial_stm32_01/" rel="next" title="【STM32入门教学】——材料准备与工程搭建">
+                  【STM32入门教学】——材料准备与工程搭建 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Haoqi Han</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

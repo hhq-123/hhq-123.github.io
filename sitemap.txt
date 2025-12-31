@@ -1,0 +1,10 @@
+http://example.com/tags/index.html
+http://example.com/about/index.html
+http://example.com/categories/index.html
+http://example.com/2024/07/04/posts_tutorial_stm32_02/
+http://example.com/2024/07/04/posts_tutorial_stm32_01/
+http://example.com/2024/07/04/posts_library_spi_master/
+http://example.com/2024/07/04/posts_library_spi_slave_IT/
+http://example.com/2024/07/04/posts_tutorial_robot_01/
+http://example.com/2024/06/30/posts_library_usart_DMA/
+http://example.com/

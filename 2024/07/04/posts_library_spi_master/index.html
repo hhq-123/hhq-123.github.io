@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言SPI，想了很久没想明白其DMA或者IT比较好用的方法，可能之后也会写一个我个人使用场景大数据流不多，如果是大批量数据交互自然是DMA更好用，但考虑到多从机通讯，感觉还是阻塞式更灵活一些，毕竟大部分通讯片选延时1us，但一个数据传进去也就不到1us。以后有时间改个DMA或者IT升级版 1234spix &#x3D; new_SPI_Master_Driver(SPIx_Port, CS_GPIOx, C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库">
+<meta property="og:url" content="http://example.com/2024/07/04/posts_library_spi_master/index.html">
+<meta property="og:site_name" content="Mr.NoFish">
+<meta property="og:description" content="前言SPI，想了很久没想明白其DMA或者IT比较好用的方法，可能之后也会写一个我个人使用场景大数据流不多，如果是大批量数据交互自然是DMA更好用，但考虑到多从机通讯，感觉还是阻塞式更灵活一些，毕竟大部分通讯片选延时1us，但一个数据传进去也就不到1us。以后有时间改个DMA或者IT升级版 1234spix &#x3D; new_SPI_Master_Driver(SPIx_Port, CS_GPIOx, C">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-31T08:02:28.433Z">
+<meta property="article:author" content="Haoqi Han">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/07/04/posts_library_spi_master/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/07/04/posts_library_spi_master/","path":"2024/07/04/posts_library_spi_master/","title":"工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库 | Mr.NoFish</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Mr.NoFish</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CubeMX%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">CubeMX配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SPI%E4%B8%BB%E6%9C%BA%E9%A9%B1%E5%8A%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">SPI主机驱动实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spi-master-driver-h"><span class="nav-number">3.1.</span> <span class="nav-text">spi_master_driver.h</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spi-master-driver-c"><span class="nav-number">3.2.</span> <span class="nav-text">spi_master_driver.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E6%8E%A5%E5%8F%A3%E8%A1%A5%E5%85%85"><span class="nav-number">4.</span> <span class="nav-text">额外的接口补充</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Haoqi Han</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/04/posts_library_spi_master/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Haoqi Han">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库 | Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-07-04 00:00:00" itemprop="dateCreated datePublished" datetime="2024-07-04T00:00:00+08:00">2024-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 16:02:28" itemprop="dateModified" datetime="2025-12-31T16:02:28+08:00">2025-12-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>SPI，想了很久没想明白其DMA或者IT比较好用的方法，可能之后也会写一个<br>我个人使用场景大数据流不多，如果是大批量数据交互自然是DMA更好用，但考虑到多从机通讯，感觉还是阻塞式更灵活一些，毕竟大部分通讯片选延时1us，但一个数据传进去也就不到1us。<br>以后有时间改个DMA或者IT升级版</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spix = new_SPI_Master_Driver(SPIx_Port, CS_GPIOx, CS_Pin);<span class="comment">//完成初始化</span></span><br><span class="line">RxData = spix-&gt;tr16(spix, TxData);<span class="comment">//数据传递</span></span><br><span class="line">spix-&gt;cs_l(spix);;<span class="comment">//CS拉低</span></span><br><span class="line">spix-&gt;cs_h(spix);;<span class="comment">//CS拉搞</span></span><br></pre></td></tr></table></figure>
+<p>SPI的多从机任务可以自己挂CS，并在上层实现数据流读取</p>
+<p>从机设计可以参考文章，两个库我测试过一些，目前看交换交换数据没啥大问题</p>
+<a href="/2024/07/04/posts_library_spi_slave_IT/" title="工程文件参考——CubeMX+LL库+SPI从机 中断式通用库">工程文件参考——CubeMX+LL库+SPI从机 中断式通用库</a>
+
+<p>上层实现可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_23297513/article/details/140156656">工程文件参考——ADS1118多从机驱动（base on spi_driver）</a><br>需要8位传输的可以自己改</p>
+<h1 id="CubeMX配置"><a href="#CubeMX配置" class="headerlink" title="CubeMX配置"></a>CubeMX配置</h1><p>开了就能用，注意匹配下，数据长度，8bit还是16bit。MSB是先高位还是先低位，以及CPOL与CPHA的设置。NSS硬件片选没什么用，包括从机的NSS，感觉不如外部触发中断。</p>
+<h1 id="SPI主机驱动实现"><a href="#SPI主机驱动实现" class="headerlink" title="SPI主机驱动实现"></a>SPI主机驱动实现</h1><h2 id="spi-master-driver-h"><a href="#spi-master-driver-h" class="headerlink" title="spi_master_driver.h"></a>spi_master_driver.h</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Define to prevent recursive inclusion -------------------------------------*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SPI_MASTER_DRIVER_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SPI_MASTER_DRIVER_H</span></span><br><span class="line"><span class="comment">/* =================================================================================</span></span><br><span class="line"><span class="comment">File name:       __SPI_MASTER_DRIVER_H</span></span><br><span class="line"><span class="comment">Author: Mr.NoFish</span></span><br><span class="line"><span class="comment">===================================================================================*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Includes ------------------------------------------------------------------*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;spi.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">SPI_Master_Driver_</span> <span class="title">SPI_Master_Driver</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> SPI_Master_Driver* spi1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPIMasterfptrCS_H)</span><span class="params">(SPI_Master_Driver*)</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPIMasterfptrCS_L)</span><span class="params">(SPI_Master_Driver*)</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">uint16_t</span> <span class="params">(*SPIMasterfptrTranRecv16)</span><span class="params">(SPI_Master_Driver*, <span class="type">uint16_t</span>)</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPIMasterfptrTran16)</span><span class="params">(SPI_Master_Driver*, <span class="type">uint16_t</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SPI_Master_Driver_</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	SPI_TypeDef* SPIx;</span><br><span class="line">	GPIO_TypeDef* CS_GPIOx;</span><br><span class="line">	<span class="type">uint32_t</span> CS_Pin;</span><br><span class="line">	</span><br><span class="line">	<span class="type">uint16_t</span> tx_buf;</span><br><span class="line">	<span class="type">uint16_t</span> rx_buf;</span><br><span class="line">	</span><br><span class="line">	SPIMasterfptrCS_H cs_h;</span><br><span class="line">	SPIMasterfptrCS_L cs_l;</span><br><span class="line">	SPIMasterfptrTranRecv16 tr16;</span><br><span class="line">	SPIMasterfptrTran16 tran16;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SPI_Master_Driver* <span class="title function_">new_SPI_Master_Driver</span><span class="params">(SPI_TypeDef* SPIx_Port, GPIO_TypeDef* CS_GPIOx, <span class="type">uint32_t</span> CS_Pin)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_master_chip_select_set</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_master_chip_select_reset</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_master_transmit_16</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj, <span class="type">uint16_t</span> TxData)</span>;</span><br><span class="line"><span class="type">uint16_t</span> <span class="title function_">spi_master_transmit_receive_16</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj, <span class="type">uint16_t</span> TxData)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="spi-master-driver-c"><a href="#spi-master-driver-c" class="headerlink" title="spi_master_driver.c"></a>spi_master_driver.c</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* =================================================================================</span></span><br><span class="line"><span class="comment">File name:       __SPI_MASTER_DRIVER_C</span></span><br><span class="line"><span class="comment">Author: Mr.NoFish</span></span><br><span class="line"><span class="comment">===================================================================================*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;spi_master_driver.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">SPI_Master_Driver* spi1;</span><br><span class="line"></span><br><span class="line">SPI_Master_Driver* <span class="title function_">new_SPI_Master_Driver</span><span class="params">(SPI_TypeDef* SPIx_Port, GPIO_TypeDef* CS_GPIOx, <span class="type">uint32_t</span> CS_Pin)</span></span><br><span class="line">&#123;</span><br><span class="line">	SPI_Master_Driver* pObj = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="type">uint8_t</span> i = <span class="number">0</span>;</span><br><span class="line">	pObj = (SPI_Master_Driver*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(SPI_Master_Driver));</span><br><span class="line">	<span class="keyword">if</span> (pObj == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;WARN: SPI_Master_Driver initialization failed.\r\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">	pObj-&gt;SPIx = SPIx_Port;</span><br><span class="line">	pObj-&gt;CS_GPIOx = CS_GPIOx;</span><br><span class="line">	pObj-&gt;CS_Pin = CS_Pin;</span><br><span class="line"></span><br><span class="line">	pObj-&gt;cs_h = spi_master_chip_select_set;</span><br><span class="line">	pObj-&gt;cs_l = spi_master_chip_select_reset;</span><br><span class="line">	pObj-&gt;tran16 = spi_master_transmit_16;</span><br><span class="line">	pObj-&gt;tr16 = spi_master_transmit_receive_16;</span><br><span class="line">	</span><br><span class="line">	pObj-&gt;cs_h(pObj);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;INFO: SPI_Master_Driver initialization succeeded.\r\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> pObj;			</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_master_chip_select_set</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj)</span></span><br><span class="line">&#123;</span><br><span class="line">	LL_GPIO_SetOutputPin(pSMObj-&gt;CS_GPIOx, pSMObj-&gt;CS_Pin);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_master_chip_select_reset</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj)</span></span><br><span class="line">&#123;</span><br><span class="line">	LL_GPIO_ResetOutputPin(pSMObj-&gt;CS_GPIOx, pSMObj-&gt;CS_Pin);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_master_transmit_16</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj, <span class="type">uint16_t</span> TxData)</span></span><br><span class="line">&#123;	</span><br><span class="line">	pSMObj-&gt;tx_buf = TxData;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span>(!LL_SPI_IsActiveFlag_TXE(pSMObj-&gt;SPIx));</span><br><span class="line">	LL_SPI_TransmitData16(pSMObj-&gt;SPIx, pSMObj-&gt;tx_buf);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">uint16_t</span> <span class="title function_">spi_master_transmit_receive_16</span><span class="params">(SPI_Master_Driver* <span class="type">const</span> pSMObj, <span class="type">uint16_t</span> TxData)</span></span><br><span class="line">&#123;	</span><br><span class="line">	pSMObj-&gt;tx_buf = TxData;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span>(!LL_SPI_IsActiveFlag_TXE(pSMObj-&gt;SPIx));</span><br><span class="line">	LL_SPI_TransmitData16(pSMObj-&gt;SPIx, pSMObj-&gt;tx_buf);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span>(LL_SPI_IsActiveFlag_BSY(pSMObj-&gt;SPIx));</span><br><span class="line">	<span class="keyword">while</span>(!LL_SPI_IsActiveFlag_RXNE(pSMObj-&gt;SPIx));</span><br><span class="line">	pSMObj-&gt;rx_buf =  LL_SPI_ReceiveData16(pSMObj-&gt;SPIx);</span><br><span class="line">		</span><br><span class="line">  <span class="keyword">return</span> pSMObj-&gt;rx_buf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr style=" border:solid; width:100px; height:1px;" color="#000000" size="1"">
+
+<h1 id="额外的接口补充"><a href="#额外的接口补充" class="headerlink" title="额外的接口补充"></a>额外的接口补充</h1><p>LL_SPI_Enable(SPIx);别忘记自己加一下，但留意别在初始化之前Enable。<br>SPI每个设备的实现方式都不同，所以需要根据数据手册进一步实现上层设计。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/04/posts_library_spi_slave_IT/" rel="prev" title="工程文件参考——CubeMX+LL库+SPI从机 中断式通用库">
+                  <i class="fa fa-angle-left"></i> 工程文件参考——CubeMX+LL库+SPI从机 中断式通用库
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/07/04/posts_tutorial_stm32_02/" rel="next" title="【STM32入门教学】——串口、定时器与参考资料">
+                  【STM32入门教学】——串口、定时器与参考资料 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Haoqi Han</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

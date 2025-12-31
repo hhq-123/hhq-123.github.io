@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言SPI从机，让你的单片机变成战斗机主打一个高速数据流，双向传输，SimToReal的不二数据流选择SPI从机的硬件NSS模式感觉不是很好用，也没有额外的中断功能，压根不知道什么时候被传了数据所以实现这个功能的时候，我考虑使用GPIO的外部中断触发实现片选功能，并在中断触发中完成数据交换的初始化任务样例是考虑一个4字节的SPI数据互换，并在外部中断函数中完成后续的数据处理任务 1spix &#x3D; n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工程文件参考——CubeMX+LL库+SPI从机 中断式通用库">
+<meta property="og:url" content="http://example.com/2024/07/04/posts_library_spi_slave_IT/index.html">
+<meta property="og:site_name" content="Mr.NoFish">
+<meta property="og:description" content="前言SPI从机，让你的单片机变成战斗机主打一个高速数据流，双向传输，SimToReal的不二数据流选择SPI从机的硬件NSS模式感觉不是很好用，也没有额外的中断功能，压根不知道什么时候被传了数据所以实现这个功能的时候，我考虑使用GPIO的外部中断触发实现片选功能，并在中断触发中完成数据交换的初始化任务样例是考虑一个4字节的SPI数据互换，并在外部中断函数中完成后续的数据处理任务 1spix &#x3D; n">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-31T08:02:28.433Z">
+<meta property="article:author" content="Haoqi Han">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/07/04/posts_library_spi_slave_IT/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/07/04/posts_library_spi_slave_IT/","path":"2024/07/04/posts_library_spi_slave_IT/","title":"工程文件参考——CubeMX+LL库+SPI从机 中断式通用库"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>工程文件参考——CubeMX+LL库+SPI从机 中断式通用库 | Mr.NoFish</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Mr.NoFish</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CubeMX%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">CubeMX配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SPI%E4%BB%8E%E6%9C%BA%E9%A9%B1%E5%8A%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">SPI从机驱动实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spi-slave-driver-h"><span class="nav-number">3.1.</span> <span class="nav-text">spi_slave_driver.h</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spi-driver-c"><span class="nav-number">3.2.</span> <span class="nav-text">spi_driver.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E6%8E%A5%E5%8F%A3%E8%A1%A5%E5%85%85"><span class="nav-number">4.</span> <span class="nav-text">额外的接口补充</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#stm32f7xx-it-c"><span class="nav-number">4.1.</span> <span class="nav-text">stm32f7xx_it.c</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Haoqi Han</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/04/posts_library_spi_slave_IT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Haoqi Han">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="工程文件参考——CubeMX+LL库+SPI从机 中断式通用库 | Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          工程文件参考——CubeMX+LL库+SPI从机 中断式通用库
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-07-04 00:00:00" itemprop="dateCreated datePublished" datetime="2024-07-04T00:00:00+08:00">2024-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 16:02:28" itemprop="dateModified" datetime="2025-12-31T16:02:28+08:00">2025-12-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>SPI从机，让你的单片机变成战斗机<br>主打一个高速数据流，双向传输，SimToReal的不二数据流选择<br>SPI从机的硬件NSS模式感觉不是很好用，也没有额外的中断功能，压根不知道什么时候被传了数据<br>所以实现这个功能的时候，我考虑使用GPIO的外部中断触发实现片选功能，并在中断触发中完成数据交换的初始化任务<br>样例是考虑一个4字节的SPI数据互换，并在外部中断函数中完成后续的数据处理任务</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spix = new_SPI_Slave_Driver(SPIx);</span><br></pre></td></tr></table></figure>
+
+<p>额外的，需要在SPI与GPIO的中断中补全接口</p>
+<p>主机设计可以参考文章，两个库我测试过一些，目前看交换交换数据没啥大问题</p>
+<a href="/2024/07/04/posts_library_spi_master/" title="工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库">工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库</a>
+
+
+<h1 id="CubeMX配置"><a href="#CubeMX配置" class="headerlink" title="CubeMX配置"></a>CubeMX配置</h1><p>开了就能用，用slave，注意匹配下，数据长度，8bit还是16bit。MSB是先高位还是先低位，以及CPOL与CPHA的设置，留意下开一下SPI的中断。</p>
+<p>CS开GPIO的外部中断，开上下延触发</p>
+<h1 id="SPI从机驱动实现"><a href="#SPI从机驱动实现" class="headerlink" title="SPI从机驱动实现"></a>SPI从机驱动实现</h1><h2 id="spi-slave-driver-h"><a href="#spi-slave-driver-h" class="headerlink" title="spi_slave_driver.h"></a>spi_slave_driver.h</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Define to prevent recursive inclusion -------------------------------------*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SPI_SLAVE_DRIVER_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SPI_SLAVE_DRIVER_H</span></span><br><span class="line"><span class="comment">/* =================================================================================</span></span><br><span class="line"><span class="comment">File name:       __SPI_SLAVE_DRIVER_H</span></span><br><span class="line"><span class="comment">Author: Mr.NoFish</span></span><br><span class="line"><span class="comment">===================================================================================*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Includes ------------------------------------------------------------------*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;spi.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> spi_rx_buf_len 4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> spi_tx_buf_len 4</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">SPI_Slave_Driver_</span> <span class="title">SPI_Slave_Driver</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> SPI_Slave_Driver* spix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPISlavefptrStart)</span><span class="params">(SPI_Slave_Driver*)</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPISlavefptrStop)</span><span class="params">(SPI_Slave_Driver*)</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPISlavefptrRxCallBack)</span><span class="params">(SPI_Slave_Driver*)</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*SPISlavefptrTxCallBack)</span><span class="params">(SPI_Slave_Driver*)</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SPI_Slave_Driver_</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	SPI_TypeDef* SPIx;</span><br><span class="line">	</span><br><span class="line">	<span class="type">uint8_t</span> status;</span><br><span class="line"></span><br><span class="line">	<span class="type">uint8_t</span> rx_ptr;</span><br><span class="line">	<span class="type">uint8_t</span> tx_ptr;</span><br><span class="line">	</span><br><span class="line">	<span class="type">uint16_t</span> rx_buf[spi_rx_buf_len];</span><br><span class="line">	<span class="type">uint16_t</span> tx_buf[spi_tx_buf_len];</span><br><span class="line">	</span><br><span class="line">	SPISlavefptrStart start;</span><br><span class="line">	SPISlavefptrStop stop;</span><br><span class="line">	SPISlavefptrRxCallBack rx_callback;</span><br><span class="line">	SPISlavefptrTxCallBack tx_callback;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SPI_Slave_Driver* <span class="title function_">new_SPI_Slave_Driver</span><span class="params">(SPI_TypeDef* SPIx_Port)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_start</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_stop</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_rx_callback</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_tx_callback</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="spi-driver-c"><a href="#spi-driver-c" class="headerlink" title="spi_driver.c"></a>spi_driver.c</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* =================================================================================</span></span><br><span class="line"><span class="comment">File name:       __SPI_SLAVE_DRIVER_C</span></span><br><span class="line"><span class="comment">Author: Mr.NoFish</span></span><br><span class="line"><span class="comment">===================================================================================*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;spi_slave_driver.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">SPI_Slave_Driver* spix;</span><br><span class="line"></span><br><span class="line">SPI_Slave_Driver* <span class="title function_">new_SPI_Slave_Driver</span><span class="params">(SPI_TypeDef* SPIx_Port)</span></span><br><span class="line">&#123;</span><br><span class="line">	SPI_Slave_Driver* pObj = <span class="literal">NULL</span>;</span><br><span class="line">	pObj = (SPI_Slave_Driver*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(SPI_Slave_Driver));</span><br><span class="line">	<span class="keyword">if</span> (pObj == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;WARN: SPI_Slave_Driver initialization failed.\r\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	pObj-&gt;SPIx = SPIx_Port;</span><br><span class="line"></span><br><span class="line">	pObj-&gt;start = spi_slave_start;</span><br><span class="line">	pObj-&gt;stop = spi_slave_stop;</span><br><span class="line">	pObj-&gt;rx_callback = spi_slave_rx_callback;</span><br><span class="line">	pObj-&gt;tx_callback = spi_slave_tx_callback;</span><br><span class="line">	</span><br><span class="line">	LL_SPI_SetRxFIFOThreshold(pObj-&gt;SPIx, LL_SPI_RX_FIFO_TH_HALF);</span><br><span class="line">	</span><br><span class="line">	LL_SPI_EnableIT_TXE(pObj-&gt;SPIx);</span><br><span class="line">	LL_SPI_EnableIT_RXNE(pObj-&gt;SPIx);</span><br><span class="line">	<span class="comment">//LL_SPI_EnableIT_ERR(pObj-&gt;SPIx);</span></span><br><span class="line">	</span><br><span class="line"><span class="comment">//	pObj-&gt;tx_buf[0] = 0x2121;</span></span><br><span class="line"><span class="comment">//	pObj-&gt;tx_buf[1] = 0x3232;</span></span><br><span class="line"><span class="comment">//	pObj-&gt;tx_buf[2] = 0x4343;</span></span><br><span class="line"><span class="comment">//	pObj-&gt;tx_buf[3] = 0x5454;</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;INFO: SPI_Slave_Driver initialization succeeded.\r\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> pObj;			</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_start</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span></span><br><span class="line">&#123;</span><br><span class="line">	LL_SPI_Enable(pSSObj-&gt;SPIx);</span><br><span class="line">	pSSObj-&gt;status = <span class="number">0</span>;</span><br><span class="line">	pSSObj-&gt;rx_ptr = <span class="number">0</span>;</span><br><span class="line">	pSSObj-&gt;tx_ptr = <span class="number">0</span>;</span><br><span class="line">	LL_SPI_TransmitData16(pSSObj-&gt;SPIx, pSSObj-&gt;tx_buf[pSSObj-&gt;tx_ptr++]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_stop</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span></span><br><span class="line">&#123;</span><br><span class="line">	LL_SPI_Disable(pSSObj-&gt;SPIx);</span><br><span class="line">	<span class="keyword">if</span>((pSSObj-&gt;rx_ptr == spi_rx_buf_len) &amp;&amp; (pSSObj-&gt;tx_ptr == spi_tx_buf_len))</span><br><span class="line">		pSSObj-&gt;status = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		pSSObj-&gt;status = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_rx_callback</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(pSSObj-&gt;rx_ptr&lt;spi_rx_buf_len)</span><br><span class="line">		pSSObj-&gt;rx_buf[pSSObj-&gt;rx_ptr++] = LL_SPI_ReceiveData16(pSSObj-&gt;SPIx);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spi_slave_tx_callback</span><span class="params">(SPI_Slave_Driver* <span class="type">const</span> pSSObj)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(pSSObj-&gt;tx_ptr&lt;spi_tx_buf_len)</span><br><span class="line">		LL_SPI_TransmitData16(pSSObj-&gt;SPIx, pSSObj-&gt;tx_buf[pSSObj-&gt;tx_ptr++]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr style=" border:solid; width:100px; height:1px;" color="#000000" size="1"">
+
+<h1 id="额外的接口补充"><a href="#额外的接口补充" class="headerlink" title="额外的接口补充"></a>额外的接口补充</h1><h2 id="stm32f7xx-it-c"><a href="#stm32f7xx-it-c" class="headerlink" title="stm32f7xx_it.c"></a>stm32f7xx_it.c</h2><p>CS设置，分别设置下降沿的启动功能与上升沿的关闭与数据处理功能</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">EXTI4_15_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">/* USER CODE BEGIN EXTI4_15_IRQn 0 */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* USER CODE END EXTI4_15_IRQn 0 */</span></span><br><span class="line">  <span class="keyword">if</span> (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_15) != RESET)</span><br><span class="line">  &#123;</span><br><span class="line">    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_15);</span><br><span class="line">    <span class="comment">/* USER CODE BEGIN LL_EXTI_LINE_15_FALLING */</span></span><br><span class="line">		spix-&gt;start(spix);</span><br><span class="line">    <span class="comment">/* USER CODE END LL_EXTI_LINE_15_FALLING */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_15) != RESET)</span><br><span class="line">  &#123;</span><br><span class="line">    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_15);</span><br><span class="line">    <span class="comment">/* USER CODE BEGIN LL_EXTI_LINE_15_RISING */</span></span><br><span class="line">		spix-&gt;stop(spix);</span><br><span class="line">		<span class="comment">//传输完成后的数据处理功能</span></span><br><span class="line">    <span class="comment">/* USER CODE END LL_EXTI_LINE_15_RISING */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/* USER CODE BEGIN EXTI4_15_IRQn 1 */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* USER CODE END EXTI4_15_IRQn 1 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以及SPI的中断处理，增设读取控制器</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SPI1_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">/* USER CODE BEGIN SPI1_IRQn 0 */</span></span><br><span class="line">  <span class="keyword">if</span>(LL_SPI_IsActiveFlag_RXNE(SPI1))</span><br><span class="line">  &#123;</span><br><span class="line">		spix-&gt;rx_callback(spix);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(LL_SPI_IsActiveFlag_TXE(SPI1))</span><br><span class="line">  &#123;</span><br><span class="line">		spix-&gt;tx_callback(spix);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/* USER CODE END SPI1_IRQn 0 */</span></span><br><span class="line">  <span class="comment">/* USER CODE BEGIN SPI1_IRQn 1 */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* USER CODE END SPI1_IRQn 1 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>此外比较难受的是GPIO初始化后，会自动把中断打开，会导致提前进入中断处理函数，所以需要到gpio.c中把中断开启关掉</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* EXTI interrupt init*/</span></span><br><span class="line">NVIC_SetPriority(EXTI4_15_IRQn, <span class="number">0</span>);</span><br><span class="line"><span class="comment">//NVIC_EnableIRQ(EXTI4_15_IRQn);</span></span><br></pre></td></tr></table></figure>
+
+<p>最后在功能实现中依次启动各个功能</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spi = new_SPI_Slave_Driver(SPI1);</span><br><span class="line">NVIC_EnableIRQ(EXTI4_15_IRQn);</span><br></pre></td></tr></table></figure>
+
+<p>就可以愉快的高速数据传输控制了</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/06/30/posts_library_usart_DMA/" rel="prev" title="工程文件参考——CubeMX+LL库+USART+DMA+不定长数据接收发送库">
+                  <i class="fa fa-angle-left"></i> 工程文件参考——CubeMX+LL库+USART+DMA+不定长数据接收发送库
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/07/04/posts_library_spi_master/" rel="next" title="工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库">
+                  工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Haoqi Han</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

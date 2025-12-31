@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言本文尝试用高中生能理解的话讲述下机器人控制问题的一些最基本思路  关于基本控制单元你现在手上有一枚电机，两端接上正负极，电机将会旋转，反向连接，则会反转。调低输入的电压，会发现电机转速越来越慢直到停止 但电机的转矩通常很小，我们利用杠杆原理，制造一个齿轮组接进去。通过齿轮的传动，输出端的力量更大了，尽管代价是输出转速降低导致的 现在你又有了一个电位计，这很像你初中学过的滑动变阻器，只是不同的是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【机器人导论】——如何控制机器人？">
+<meta property="og:url" content="http://example.com/2024/07/04/posts_tutorial_robot_01/index.html">
+<meta property="og:site_name" content="Mr.NoFish">
+<meta property="og:description" content="前言本文尝试用高中生能理解的话讲述下机器人控制问题的一些最基本思路  关于基本控制单元你现在手上有一枚电机，两端接上正负极，电机将会旋转，反向连接，则会反转。调低输入的电压，会发现电机转速越来越慢直到停止 但电机的转矩通常很小，我们利用杠杆原理，制造一个齿轮组接进去。通过齿轮的传动，输出端的力量更大了，尽管代价是输出转速降低导致的 现在你又有了一个电位计，这很像你初中学过的滑动变阻器，只是不同的是">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-04T11:25:51.000Z">
+<meta property="article:modified_time" content="2025-12-31T08:02:28.433Z">
+<meta property="article:author" content="Haoqi Han">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/07/04/posts_tutorial_robot_01/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/07/04/posts_tutorial_robot_01/","path":"2024/07/04/posts_tutorial_robot_01/","title":"【机器人导论】——如何控制机器人？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【机器人导论】——如何控制机器人？ | Mr.NoFish</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Mr.NoFish</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9F%BA%E6%9C%AC%E6%8E%A7%E5%88%B6%E5%8D%95%E5%85%83"><span class="nav-number">2.</span> <span class="nav-text">关于基本控制单元</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E8%BF%9B%E9%98%B6"><span class="nav-number">3.</span> <span class="nav-text">关于进阶</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Haoqi Han</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/04/posts_tutorial_robot_01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Haoqi Han">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【机器人导论】——如何控制机器人？ | Mr.NoFish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【机器人导论】——如何控制机器人？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-07-04 19:25:51" itemprop="dateCreated datePublished" datetime="2024-07-04T19:25:51+08:00">2024-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 16:02:28" itemprop="dateModified" datetime="2025-12-31T16:02:28+08:00">2025-12-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文尝试用高中生能理解的话讲述下机器人控制问题的一些最基本思路</p>
+<hr>
+<h1 id="关于基本控制单元"><a href="#关于基本控制单元" class="headerlink" title="关于基本控制单元"></a>关于基本控制单元</h1><p>你现在手上有一枚电机，两端接上正负极，电机将会旋转，反向连接，则会反转。调低输入的电压，会发现电机转速越来越慢直到停止</p>
+<p>但电机的转矩通常很小，我们利用杠杆原理，制造一个齿轮组接进去。通过齿轮的传动，输出端的力量更大了，尽管代价是输出转速降低导致的</p>
+<p>现在你又有了一个电位计，这很像你初中学过的滑动变阻器，只是不同的是，这个东西被设计成了圆形。将电位计的两端接入电压，根据电阻的分压我们便可以获取到一个角度值。</p>
+<p>现在我们将 电机-减速器-电位计 串在一起，我们制造了一个最简单的机器人关节单元，假如说我们现在希望关节单元被控制在180°，当电表分压大于180°时，我们正转，当电表分压小于180°时，我们反转，机器人的关节就可以被控制在180°。</p>
+<p>我们这么做时会发现，机器人的关节在180°时会剧烈的抖动，这是因为目标点附近的速度变化很大，很难让电机稳定的控制在一个位置上，似乎是越靠近180°时，电机的速度应该更慢，这将被描述为统一的函数 $u&#x3D;k*e$</p>
+<p>其中u表示施加给电机的电压（正负号表示方向），e表示电位计示数与你的目标差值（正负号表示方向），k则代表你希望的系统反应程度</p>
+<p>电机的转速我们是不清楚的，为了控制电机的旋转速度，我们将降低电压，但持续的降低电压，我们发现电机会突然停转，我们没有办法实现电机很缓慢的旋转，这是因为电机通常存在截止电压，低于这个电压后电机无法起转。</p>
+<p>这类似于二极管LED，只存在亮 不亮 和炸掉的三种状态</p>
+<p>我们回到电机旋转的问题，在相同电压施加的情况下，考虑在1s中我仅给电机通电100ms，和1s中我给电机通电900ms，而电机的转子本质上是一种飞轮，会存储能量。我们从能量的角度观察，通常考虑到 $UIt&#x3D;\frac{1}{2} mv^2$，周期时间内对电机通电的时间越长，电机旋转的速度越快。</p>
+<p>在驱动任务中，电压的高低变化是很困难的，但反复的开关任务却尤其的好做，我们约定1s为操作周期，以电机开关时长作为输入量进行电机的速度控制。</p>
+<p>但在这个任务中，我们不太可能让自己坐在这里进行开关，我们引入一个比较器来代替我们的工作。</p>
+<p>最终我们实现了一个最简单的机器人控制单元，这个单元便是我们日常见到的舵机。</p>
+<p>这里有很多关于你未来研究机器人会涉及到的知识点，例如</p>
+<ol>
+<li>$u&#x3D;k*e$，拓展到PID控制</li>
+<li>开关时长，拓展到PWM控制</li>
+<li>电压采样，拓展到ADC采样</li>
+</ol>
+<p>等等诸如此类还有很多</p>
+<h1 id="关于进阶"><a href="#关于进阶" class="headerlink" title="关于进阶"></a>关于进阶</h1><p>为了更好的控制这个系统，我们会用单片机代替比较器，实现电位计电压采样、电机驱动控制、与上位机通讯等等。</p>
+<p>其中单片机只作为数字信号处理核心（微机原理、单片机），电位计的采样需要设计跟踪电路或比例放大电路（模拟电路），电机的驱动需要设计电机驱动桥（功率器件）与电源管理系统，与其他设备通讯则需要设计相应的通讯接口电路。</p>
+<p>减速器系统，其实称为变速系统（机械设计原理）更为合适，除了简单的齿轮，还会涉及到行星齿轮、摆线减速等等，甚至于最基本的连杆系统，其本质也是变速系统。</p>
+<p>电机（电机控制），除了最基本的有刷直流电机，还会涉及到步进电机，无刷电机等等。相比较而言，有刷直流电机控制最为简单，无刷电机可以提供更强的力矩，步进可以提供更简单的位置控制。各种电机驱动方式也不尽相同，需要根据具体应用场景进行选择。</p>
+<p>电位计，代表了传感器（微电子专业），IC行业突飞猛进的今天，各式各样的传感器，包括有位置传感器、压力传感器、温度传感器等等。其机理都是物理量向电压量的转变，通过ADC技术进行采集，你可以依靠单片机的ADC功能进行数据采集。但长距离模拟信号传递会造成信号失真，所以也有很多IC将数据采集进行了封装，内部完成了信号测量，并通过各种传输协议进行交互，例如SPI、IIC、PWM等等。</p>
+<p>除了位置控制，速度控制、加速度控制都是基础控制问题。针对不同的工程需求设置不同的控制方法，例如双轮小车可以依靠速度控制，简易机器人可以依靠位置控制，无人机旋翼可以依靠力矩控制等等。这些基础控制问题组成了机器人运动的基本单元。</p>
+<p>基本单元的再组合构成了各种各样的机器人，通常我们描述机器人质心在空间运动为一个[位置、速度、加速度]信息。机器人肢体（包括连杆、旋翼、甚至是火箭推进器）会建立出对中央假想质心的力与力矩作用，计算肢体对中央质心的动力学，建立系统在环境中的运动信息（单刚体动力学），可以实现机器人最基本的运动控制。</p>
+<p>连杆系统（理论力学、多刚体动力学），包括我们人类在内，是一种最精简的连杆运动机器人，讨论多段连杆的动力学问题（机器人学），可以评估出机器人肢体对自身或对其他物体的力作用问题。</p>
+<p>额外的，例如人类，肢体由更复杂的肌腱系统进行驱动，比较理想的是利用并联机构进行替代（并联机器人、闭链运动学），这涉及到闭链运动学的建立，会涉及到更加复杂的控制问题。</p>
+<p>“吾等众生，生于尘土，内究己身，外拓乾坤，终得世间真理。”</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/04/posts_tutorial_stm32_01/" rel="prev" title="【STM32入门教学】——材料准备与工程搭建">
+                  <i class="fa fa-angle-left"></i> 【STM32入门教学】——材料准备与工程搭建
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Haoqi Han</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
