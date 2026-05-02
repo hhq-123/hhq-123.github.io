@@ -11,35 +11,25 @@ redirect_from:
 
 Education
 ======
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
-* M.S. in Jekyll, GitHub University, 2014
-* B.S. in GitHub, GitHub University, 2012
-
-Work experience
-======
-* Spring 2024: Academic Pages Collaborator
-  * GitHub University
-  * Duties includes: Updates and improvements to template
-  * Supervisor: The Users
-
-* Fall 2015: Research Assistant
-  * GitHub University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
-
-* Summer 2015: Research Assistant
-  * GitHub University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
+* Ph.D in School of Automation and Intelligent Sensing， Shanghai Jiao Tong University, 2022 (expected)
+* B.S. in School of Mechatronical Engineering， Beijing Institute of Technology, 2018
   
 Skills
 ======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
+* Advanced Actuation Technologies
+  * Quasi-direct drive reduction motor systems, Piezoelectric actuators
+
+* Robotic Mechanism Design & Kinematics
+  * Humanoid robots. Dexterous hands, Flapping-wing robots, Parallel robots
+
+* Multimodal Perception & Force/Tactile Sensing
+  * Tactile sensors, Tension sensors
+
+* Embedded Control Architectures
+  * FOC controller development, Robot controllers
+
+* Manipulation Control & Motion Planning Algorithms
+  * Dexterous hand manipulation
 
 Publications
 ======
