@@ -23,12 +23,12 @@ repository               : "hhq-123/hhq-123.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "Haoqi Han.png"
   name             : "韩昊奇 Haoqi Han"
   pronouns         : # example: "she/her"  
-  bio              : "Short biography for the left-hand sidebar"
-  location         : "Earth"
-  employer         : "Red Brick University"
+  bio              : "PhD student in Robotics, focusing on humanoid robot hardware and dexterous hand systems."
+  location         : "Shanghai"
+  employer         : "Shanghai Jiao Tong University"
   uri              : # URL
   email            : "hhq-123@sjtu.edu.cn" 
 
