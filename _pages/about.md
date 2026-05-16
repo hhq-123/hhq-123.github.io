@@ -15,7 +15,6 @@ Dexterous Hands
 A dexterous hand requires a high number of active degrees of freedom, independent joint torque sensing, and compact size. In our most recent work, we have innovatively integrated a miniature force sensing system, which enables compliant interaction, finger‑like dimensions and active DoFs comparable to those of a human finger, and a large gripping force output. More work is under review.
 <!-- 灵巧手应具有丰富的主动自由度、独立的关节力矩感知以及足够小巧的尺寸。我们在最新的工作中创新的引入微型力感知系统，具备柔顺交互、现近人手指相似的尺寸与主动自由度、巨大握力输出等特性。 -->
 
-### Related Work
 <table style="width: 100%; border-collapse: collapse; margin: 1em 0;">
   <tr>
     <td style="width: 240px; vertical-align: top; padding-right: 20px;">
