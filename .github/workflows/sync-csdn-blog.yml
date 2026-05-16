@@ -30,7 +30,7 @@ jobs:
         pip install requests beautifulsoup4 pyyaml lxml
     
     - name: Fetch CSDN articles
-      run: python scripts/fetch_csdn_articles.py
+      run: python scripts/fetch_csdn_rss.py
     
     - name: Commit and push changes
       run: |
