@@ -8,12 +8,364 @@ redirect_from:
 ---
 
 {% include base_path %}
-{% capture written_year %}'None'{% endcapture %}
-{% for post in site.posts %}
-  {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
-  {% if year != written_year %}
-    <h2 id="{{ year | slugify }}" class="archive__subtitle">{{ year }}</h2>
-    {% capture written_year %}{{ year }}{% endcapture %}
+
+<style>
+  /* ===== 博客页面样式 - 跟随网站全局主题 ===== */
+  
+  /* ===== 页面容器 ===== */
+  .blog-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ===== 统计信息栏 ===== */
+  .blog-stats {
+    background: var(--global-bg-color);
+    border: 1px solid var(--global-border-color);
+    padding: 1em 1.5em;
+    border-radius: 12px;
+    margin-bottom: 2em;
+    margin-top: 1.5em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .blog-stats-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--global-text-color);
+  }
+
+  .blog-stats-title i {
+    color: var(--global-link-color);
+  }
+
+  .blog-stats-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    flex-wrap: wrap;
+  }
+
+  .blog-stats-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--global-text-color-light);
+    font-size: 0.95em;
+  }
+
+  .blog-stats-item i {
+    color: var(--global-link-color);
+  }
+
+  .blog-stats-item strong {
+    color: var(--global-text-color);
+    font-weight: 600;
+  }
+
+  /* ===== 文章网格 ===== */
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5em;
+    margin-bottom: 2em;
+  }
+
+  @media (max-width: 768px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ===== 文章卡片 ===== */
+  .blog-card {
+    background: var(--global-bg-color);
+    border: 1px solid var(--global-border-color);
+    border-radius: 12px;
+    padding: 1.5em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-color: var(--global-link-color);
+  }
+
+  .blog-card-header {
+    margin-bottom: 1em;
+  }
+
+  .blog-card-title {
+    font-size: 1.15em;
+    font-weight: 600;
+    margin: 0 0 0.6em 0;
+    line-height: 1.5;
+  }
+
+  .blog-card-title a {
+    color: var(--global-text-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.4em;
+    transition: color 0.2s ease;
+  }
+
+  .blog-card-title a:hover {
+    color: var(--global-link-color);
+  }
+
+  .blog-card-title .external-icon {
+    font-size: 0.7em;
+    opacity: 0.5;
+    flex-shrink: 0;
+    margin-top: 0.4em;
+  }
+
+  .blog-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.2em;
+    flex-wrap: wrap;
+  }
+
+  .blog-card-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.85em;
+    color: var(--global-text-color-light);
+  }
+
+  .blog-card-meta-item i {
+    font-size: 0.9em;
+  }
+
+  .blog-card-excerpt {
+    color: var(--global-text-color-light);
+    line-height: 1.7;
+    margin: 0;
+    font-size: 0.92em;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ===== 空状态 ===== */
+  .blog-empty {
+    text-align: center;
+    padding: 4em 2em;
+    background: var(--global-bg-color);
+    border: 1px solid var(--global-border-color);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .blog-empty-icon {
+    font-size: 3em;
+    color: var(--global-link-color);
+    margin-bottom: 0.5em;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .blog-empty-text {
+    color: var(--global-text-color-light);
+    margin: 0;
+    line-height: 1.8;
+  }
+
+  .blog-empty-text a {
+    color: var(--global-link-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .blog-empty-text a:hover {
+    text-decoration: underline;
+  }
+
+  /* ===== 本地文章分区 ===== */
+  .local-posts-section {
+    margin-top: 3em;
+    padding-top: 2.5em;
+    border-top: 2px solid var(--global-border-color);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    margin-bottom: 0.5em;
+    color: var(--global-text-color);
+  }
+
+  .section-header i {
+    color: var(--global-link-color);
+  }
+
+  .section-desc {
+    color: var(--global-text-color-light);
+    margin-bottom: 1.5em;
+    font-size: 0.95em;
+  }
+
+  .archive__subtitle {
+    color: var(--global-text-color);
+    border-bottom: none;
+    padding-bottom: 0.3em;
+    margin-top: 2em;
+    font-weight: 600;
+  }
+
+  /* ===== Dark 主题增强阴影 ===== */
+  html[data-theme="dark"] .blog-card {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  html[data-theme="dark"] .blog-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  html[data-theme="dark"] .blog-stats {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  html[data-theme="dark"] .blog-empty {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  /* ===== 响应式调整 ===== */
+  @media (max-width: 600px) {
+    .blog-stats {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .blog-card {
+      padding: 1.2em;
+    }
+  }
+</style>
+
+<!-- <div class="wordwrap">Articles synced from <a href="https://blog.csdn.net/Lvyizhuo?type=blog" target="_blank" rel="noopener noreferrer">CSDN</a>.</div> -->
+<div class="wordwrap">You can also find my articles on <a href="https://blog.csdn.net/Lvyizhuo?type=blog" target="_blank" rel="noopener noreferrer">my CSDN blog</a>.</div>
+
+  <!-- <h2 class="section-header">
+    <i class="fa fa-rss"></i> 花间相见的博客文章
+  </h2> -->
+
+<div class="blog-container">
+
+  {% if site.data.csdn_posts.articles.size > 0 %}
+    
+    <!-- 统计信息 -->
+    <div class="blog-stats">
+      <div class="blog-stats-title">
+        <i class="fa fa-rss"></i> 花间相见的博客文章
+      </div>
+      <div class="blog-stats-info">
+        <div class="blog-stats-item">
+          <i class="fa fa-newspaper-o"></i>
+          <span>共 <strong>{{ site.data.csdn_posts.total_count }}</strong> 篇文章</span>
+        </div>
+        <div class="blog-stats-item">
+          <i class="fa fa-refresh"></i>
+          <span>自动更新于: <strong>{{ site.data.csdn_posts.last_updated }}</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 文章网格 -->
+    <div class="blog-grid">
+      {% for article in site.data.csdn_posts.articles %}
+        <article class="blog-card">
+          <div class="blog-card-header">
+            <h3 class="blog-card-title">
+              <a href="{{ article.link }}" target="_blank" rel="noopener noreferrer">
+                <span>{{ article.title }}</span>
+                <i class="fa fa-external-link external-icon"></i>
+              </a>
+            </h3>
+            <div class="blog-card-meta">
+              {% if article.date %}
+                <span class="blog-card-meta-item">
+                  <i class="fa fa-calendar-o"></i>
+                  {{ article.date }}
+                </span>
+              {% endif %}
+              {% if article.views and article.views != '' %}
+                <span class="blog-card-meta-item">
+                  <i class="fa fa-eye"></i>
+                  {{ article.views }} views
+                </span>
+              {% endif %}
+            </div>
+          </div>
+          
+          {% if article.excerpt %}
+            <p class="blog-card-excerpt">{{ article.excerpt }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    
+    <!-- 空状态 -->
+    <div class="blog-empty">
+      <div class="blog-empty-icon">
+        <i class="fa fa-spinner fa-spin"></i>
+      </div>
+      <p class="blog-empty-text">
+        正在同步 CSDN 博客文章，请稍候...<br>
+        <small>您也可以直接访问 
+          <a href="https://blog.csdn.net/Lvyizhuo?type=blog" target="_blank">我的 CSDN 博客</a>
+        </small>
+      </p>
+    </div>
+
   {% endif %}
-  {% include archive-single.html %}
-{% endfor %}
+
+  <!-- 本地精选文章 -->
+  {% if site.posts.size > 0 %}
+    <div class="local-posts-section">
+      <h2 class="section-header">
+        <i class="fa fa-star"></i> 精选文章
+      </h2>
+      <p class="section-desc">
+        以下是站内托管的精选博客文章
+      </p>
+      
+      {% capture written_year %}'None'{% endcapture %}
+      {% for post in site.posts %}
+        {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
+        {% if year != written_year %}
+          <h3 id="{{ year | slugify }}" class="archive__subtitle">{{ year }}</h3>
+          {% capture written_year %}{{ year }}{% endcapture %}
+        {% endif %}
+        {% include archive-single.html %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</div>
