@@ -20,6 +20,14 @@ A dexterous hand requires a high number of active degrees of freedom, independen
 |--------|----------|
 |<img src="/images/tmech2026.png" alt="tmech2026" width="220"> | **Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
 
+
+<table>
+  <tr>
+    <td width="200"><img src="/images/tmech2026.png" alt="tmech2026" width="100%"></td>
+    <td>**Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)</td>
+  </tr>
+</table>
+
 Humanoid Robots
 ======
 The humanoid system involves mechanisms, motor systems, and communication systems. We have independently developed a human‑scale humanoid robot, along with joint modules and a novel leg mechanism. More work is under review.
