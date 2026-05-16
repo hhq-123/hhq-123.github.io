@@ -1,0 +1,219 @@
+last_updated: '2026-05-16 19:45:25'
+total_count: 20
+source: RSS Feed
+articles:
+- title: 工程日志——离轴编码器矫正与磁场串扰解决
+  link: https://blog.csdn.net/qq_23297513/article/details/160600288
+  date: '2026-05-01'
+  excerpt: 最近解决了一些离轴编码器的问题，包括有双离轴编码器估测角度与干扰工况下的角度估测，工况大致如此，用于支撑中空走线电机的设计；其中XY用于估测中空走线的磁环角度，而L侧则是输出轴反传回来的角度观测
+  views: ''
+- title: 工程文件参考——STM32+HAL+SPI+CRC主从机通讯
+  link: https://blog.csdn.net/qq_23297513/article/details/142754385
+  date: '2024-10-08'
+  excerpt: 关于如何简单的写一个稳定的SPI主从机通讯，思路很简单1、SPI高速传输的时候很容易出现错位之类的问题，CRC的校验首先是必要的。在STM32中SPI使用DMA通讯可以自动执行CRC的校验，只需要在CubeMX设置SPI的CRC和DMA2、从机的NSS用硬件模式不是很好用，使用外部中断可以提供更多灵活的编写方式3、有个很坑的点，如果中间出现断连等问题，很容易出现数据错位，而且错了一次会一直错下去，...
+  views: ''
+- title: 工程文件参考——ADS1118多从机驱动（base on spi_driver）
+  link: https://blog.csdn.net/qq_23297513/article/details/140156656
+  date: '2024-07-03'
+  excerpt: SPI设备如果不挂多机通讯的话真的是太遗憾了//完成初始化//读取数据需要先挂这个库工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库实现也是参考别人做的，不过优化了库，可以支持多机直接挂载。
+  views: ''
+- title: 工程文件参考——CubeMX+LL库+SPI主机 阻塞式通用库
+  link: https://blog.csdn.net/qq_23297513/article/details/140155632
+  date: '2024-07-03'
+  excerpt: LL库的SPI驱动
+  views: ''
+- title: 【STM32入门教学】——串口、定时器与参考资料
+  link: https://blog.csdn.net/qq_23297513/article/details/140080519
+  date: '2024-07-02'
+  excerpt: 咳咳，最近出差，手边没实物，实物演示等我回实验室慢慢更。
+  views: ''
+- title: 【STM32入门教学】——材料准备与工程搭建
+  link: https://blog.csdn.net/qq_23297513/article/details/139297129
+  date: '2024-06-29'
+  excerpt: 写点STM32入门教学
+  views: ''
+- title: 工程文件参考——CubeMX+LL库+USART+DMA+不定长数据接收发送库
+  link: https://blog.csdn.net/qq_23297513/article/details/140037055
+  date: '2024-06-28'
+  excerpt: 功能实现集中在“DMA+IDLE不定长接收”和“DMA数据流发送”，并做了相对应的printf封装，且支持多USART初始化。
+  views: ''
+- title: 工程文件参考——STM32F4+指数积公式驱动的UR5参数验证
+  link: https://blog.csdn.net/qq_23297513/article/details/131253678
+  date: '2023-06-16'
+  excerpt: 本文主要提供基于UR5机器人参数的指数积公式的测试样例，以供参考
+  views: ''
+- title: 工程文件参考——STM32F4+基于螺旋理论的指数积公式驱动
+  link: https://blog.csdn.net/qq_23297513/article/details/131253511
+  date: '2023-06-16'
+  excerpt: 本文主要提供使用F4系列芯片构建指数积公式驱动，以供参考
+  views: ''
+- title: LittleFOC工程简记——自制FOC电机控制器系列文大纲
+  link: https://blog.csdn.net/qq_23297513/article/details/128773025
+  date: '2023-05-18'
+  excerpt: LittleFOC工程开发大纲
+  views: ''
+- title: 日常随记——浮点数与定点数转化程序设计
+  link: https://blog.csdn.net/qq_23297513/article/details/126574714
+  date: '2022-08-28'
+  excerpt: 本文旨在讨论float字型向定点数字型转换的具体方案，并以10位小数为例。欠缺测试，欢迎交流讨论无。
+  views: ''
+- title: LittleFOC工程简记——基于定点数的电流PI控制器设计
+  link: https://blog.csdn.net/qq_23297513/article/details/126333718
+  date: '2022-08-14'
+  excerpt: 在FOC程序在设计的过程中，对于很多芯片而言，其缺乏浮点数运算器，因此大量的浮点数运算会给系统带来很大的计算负担。对于整个系统而言，采用定点数对整体程序进行优化，可以大幅减轻控制器的计算压力，从而实现更加理想的控制。本文针对定点数环境下的PI控制器的算法设计进行简要讨论，欢迎各位同学批评指正。......
+  views: ''
+- title: 【现代机器人学——螺旋理论】UR5机器人逆运动学求解
+  link: https://blog.csdn.net/qq_23297513/article/details/122659047
+  date: '2022-01-23'
+  excerpt: '系列文章目录
+
+    系列目录暂无
+
+
+    提示：本文介绍基于螺旋理论分析的UR5机器人逆运动学求解思路，仅供参考。
+
+    文章目录系列文章目录前言一、辅助公式二、逆运动学1.准备工作2.求解θ1\theta_1θ1​3.求解θ5\theta_5θ5​4.求解θ6\theta_6θ6​5.求解θ2+θ3+θ4\theta_2+\theta_3+\theta_4θ2​+θ3​+θ4​6.求解θ3\theta_3θ3​7...'
+  views: ''
+- title: 【现代机器人学——螺旋理论】UR5机器人正运动学求解
+  link: https://blog.csdn.net/qq_23297513/article/details/122655805
+  date: '2022-01-23'
+  excerpt: '系列文章目录
+
+    系列目录暂无
+
+
+    提示：本文介绍基于螺旋理论分析的UR5机器人正逆运动学求解思路，仅供参考。
+
+    文章目录系列文章目录前言一、辅助公式二、正运动学1.定义工作末端2.定义运动轴3.定义螺旋变换矩阵4.基于螺旋理论的UR5机器人正向运动学公式三、逆运动学1.准备工作8.关于RK子问题总结
+
+
+
+    前言
+
+    螺旋理论
+
+
+    参考文章：
+
+    《UR机械臂正逆运动学求解》与此文章理论方法、坐标系以及参数定义不太相...'
+  views: ''
+- title: 工程搭建教程——CubeMX+STM32F4+FreeRTOS+USART1基础工程搭建
+  link: https://blog.csdn.net/qq_23297513/article/details/118363110
+  date: '2021-06-30'
+  excerpt: 工程搭建教程——CubeMX+STM32F4+FreeRTOS+USART1基础工程搭建前言详细介绍：硬件参考：文件保存方法：一、硬件连接示意二、CubeMX工程设置1、STM32F401基础配置Pinout&amp;ConfigurationClock
+    ConfigurationProject Manager2、生成工程文件夹介绍3、FreeRTOS配置与串口配置FreeRTOS配置串口配置三、...
+  views: ''
+- title: 工程文件参考——CubeMX+STM32F4+FreeRTOS+IIC实现OLED通讯
+  link: https://blog.csdn.net/qq_23297513/article/details/118277136
+  date: '2021-06-27'
+  excerpt: '文章目录代码实现codebase.hOLED.hOLED.c
+
+
+
+    # 前言
+
+    本文主要提供F4系列芯片针对OLED芯片的通讯库，供各位参考
+
+
+    OLED芯片网络常用虚拟IIC通讯
+
+    完全没必要，请直接上硬件IIC
+
+    文件OLED.h、codebase.h请保存到include文件夹中
+
+    文件OLED.c请保存到source文件夹中
+
+    这版通讯协议不好，7月份重更
+
+    代码实现
+
+    codebase.h
+
+    #ifndef...'
+  views: ''
+- title: 工程文件参考——CubeMX+STM32F4+FreeRTOS+IIC实现JY901通讯
+  link: https://blog.csdn.net/qq_23297513/article/details/118220412
+  date: '2021-06-25'
+  excerpt: '文章目录代码实现JY901.hJY901.c
+
+
+
+    # 前言
+
+    本文主要提供F4系列芯片针对JY901芯片的通讯库，供各位参考
+
+
+    JY901芯片提供的库函数是没有F4芯片的资料的，我对着提供的F1芯片模拟IIC通讯改了一些，使用F4硬件IIC系统实现通讯效果
+
+    开发者留意下使用iic的地址，0x50要左移一位
+
+    （作者泪奔，调试一下午没出结果就因为这个）
+
+    文件LobotServoController.h、...'
+  views: ''
+- title: 课设舵机狗总结文——Python+pyserial+tkinter实现电脑端蓝牙控制
+  link: https://blog.csdn.net/qq_23297513/article/details/118220115
+  date: '2021-06-25'
+  excerpt: '前言
+
+    本文主要提供使用课设所设计舵机狗的上位机软件，供各位参考
+
+
+    安装好相关库后可以直接运行
+
+    相关文件参考
+
+    基于python的tkinter和pyserial的简易串口调试器——实现与详解
+
+    这里为了不必要的误会，我因为没怎么学过py，所以这个代码大部分是使用这个博客的内容，只是在右侧增加了一些按钮以及通讯函数
+
+    代码实现
+
+    main.py
+
+    # UART Tx/Rx demo
+
+    import tkinte...'
+  views: ''
+- title: 课设舵机狗总结文——CubeMX+STM32F4+FreeRTOS+USART2+幻尔舵机控制板 实现动作组稳定运动
+  link: https://blog.csdn.net/qq_23297513/article/details/117782242
+  date: '2021-06-25'
+  excerpt: '系列文章目录
+
+    提示：这里可以添加系列文章的所有文章的目录，目录需要自己手动添加
+
+    例如：第一章 Python 机器学习入门之pandas的使用
+
+
+    提示：写完文章后，目录可以自动生成，如何生成可参考右边的帮助文档
+
+    文章目录系列文章目录前言一、pandas是什么？二、使用步骤1.引入库2.读入数据总结
+
+
+
+    前言
+
+    提示：这里可以添加本文要记录的大概内容：
+
+    例如：随着人工智能的不断发展，机器学习这门技术也越...'
+  views: ''
+- title: 工程文件参考——STM32F4+幻尔LSC舵机控制板 四足机器人足端逆解控制器
+  link: https://blog.csdn.net/qq_23297513/article/details/118219261
+  date: '2021-06-25'
+  excerpt: '文章目录代码实现Quadruped_huaner.hQuadruped_huaner.c
+
+
+
+    # 前言
+
+    本文主要提供使用F4系列芯片针对幻尔LSC舵机控制板的四足机器人足端坐标逆解库，供各位参考
+
+
+    请搭配LobotServoController库文件使用
+
+    文件Quadruped_huaner.h请保存到include文件夹中
+
+    文件Quadruped_huaner.c请保存到source文件夹中
+
+    相...'
+  views: ''
