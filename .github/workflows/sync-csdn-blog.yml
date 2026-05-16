@@ -1,0 +1,41 @@
+name: Sync CSDN Blog Articles
+
+on:
+  # 每天凌晨2点自动运行（UTC 时间，北京时间上午10点）
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # 允许手动触发
+  workflow_dispatch:
+  
+  # 推送时触发（用于测试）
+  push:
+    branches:
+      - master
+
+jobs:
+  sync-blog:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install requests beautifulsoup4 pyyaml lxml
+    
+    - name: Fetch CSDN articles
+      run: python scripts/fetch_csdn_articles.py
+    
+    - name: Commit and push changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add _data/csdn_posts.yml
+        git commit -m "chore: sync CSDN blog articles"
+        git push
