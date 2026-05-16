@@ -16,7 +16,7 @@ A dexterous hand requires a high number of active degrees of freedom, independen
 <!-- 灵巧手应具有丰富的主动自由度、独立的关节力矩感知以及足够小巧的尺寸。我们在最新的工作中创新的引入微型力感知系统，具备柔顺交互、现近人手指相似的尺寸与主动自由度、巨大握力输出等特性。 -->
 
 ### Related Work
-|||
+| Image  | Description  |
 |--------|----------|
 |<img src="/images/tmech2026.png" alt="tmech2026" width="220"> | **Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
 
@@ -27,7 +27,7 @@ The humanoid system involves mechanisms, motor systems, and communication system
 <!-- 人形系统涉及到机构学、电机系统与通讯系统，我们独立开发了近人尺寸人形机器人，并同步开发了关节模组与新型腿部机构。 More work is under review. -->
 
 ### Related Work
-|||
+| Image  | Description  |
 |--------|----------|
 |![humanoid](/images/humanoid.png) | We are refining the approach. |
 
