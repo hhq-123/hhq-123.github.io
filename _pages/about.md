@@ -16,17 +16,22 @@ A dexterous hand requires a high number of active degrees of freedom, independen
 <!-- 灵巧手应具有丰富的主动自由度、独立的关节力矩感知以及足够小巧的尺寸。我们在最新的工作中创新的引入微型力感知系统，具备柔顺交互、现近人手指相似的尺寸与主动自由度、巨大握力输出等特性。 -->
 
 ### Related Work
-| Image  | Description  |
-|--------|----------|
-|<img src="/images/tmech2026.png" alt="tmech2026" width="220"> | **Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
-
-
-<table>
+<table style="width: 100%; border-collapse: collapse; margin: 1em 0;">
   <tr>
-    <td width="200"><img src="/images/tmech2026.png" alt="tmech2026" width="100%"></td>
-    <td>**Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)</td>
+    <td style="width: 240px; vertical-align: top; padding-right: 20px;">
+      <img src="/images/tmech2026.png" alt="tmech2026" style="width: 100%; border-radius: 4px;">
+    </td>
+    <td style="vertical-align: top; font-size: 0.95rem; line-height: 1.5; color: #2c3e50;">
+      <strong style="font-size: 1.05rem; color: #1a5d9c;">Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation</strong><br>
+      <span style="color: #4a5568;">Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE</span><br>
+      <span style="margin-top: 8px; display: inline-block;">
+        <a href="https://doi.org/10.48550/arXiv.2512.04399" style="text-decoration: none; background: #f0f2f5; padding: 2px 8px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px;">paper</a>
+        <a href="https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f" style="text-decoration: none; background: #f0f2f5; padding: 2px 8px; border-radius: 20px; font-size: 0.85rem;">video</a>
+      </span>
+    </td>
   </tr>
 </table>
+
 
 Humanoid Robots
 ======
@@ -34,19 +39,53 @@ The humanoid system involves mechanisms, motor systems, and communication system
 
 <!-- 人形系统涉及到机构学、电机系统与通讯系统，我们独立开发了近人尺寸人形机器人，并同步开发了关节模组与新型腿部机构。 More work is under review. -->
 
-### Related Work
-| Image  | Description  |
-|--------|----------|
-|![humanoid](/images/humanoid.png) | We are refining the approach. |
+
+<table style="width: 100%; border-collapse: collapse; margin: 1em 0;">
+  <tr>
+    <td style="width: 240px; vertical-align: top; padding-right: 20px;">
+      <img src="/images/humanoid.png" alt="humanoid" style="width: 100%; border-radius: 4px;">
+    </td>
+    <td style="vertical-align: top; font-size: 0.95rem; line-height: 1.5; color: #2c3e50;">
+      <strong style="font-size: 1.05rem; color: #1a5d9c;">Human‑Scale Humanoid Robot Development</strong><br>
+      <span style="color: #4a5568;">We are refining the approach.</span>
+    </td>
+   </tr>
+</table>
 
 Micro Robots
 ======
 We use carbon fiber and polyimide to construct microrobot mechanisms, and rely on piezoelectric actuators to realize micro flapping-wing robots and micro parallel robots.
 
 <!-- 我们使用碳纤维与PI构建了微机器人机构，并依靠压电制动器实现微型扑翼机器人与微并联机器人 -->
+<!-- 第1条：3-RRS 微操作器 -->
+<table style="width: 100%; border-collapse: collapse; margin: 1em 0;">
+  <tr>
+    <td style="width: 240px; vertical-align: top; padding-right: 20px;">
+      <img src="/images/icra2024.png" alt="icra2024" style="width: 100%; border-radius: 4px;">
+    </td>
+    <td style="vertical-align: top; font-size: 0.95rem; line-height: 1.5; color: #2c3e50;">
+      <strong style="font-size: 1.05rem; color: #1a5d9c;">Development of a 3-RRS Micromanipulator Based on Origami-Inspired Spherical Joint</strong><br>
+      <span style="color: #4a5568;">Haoqi Han, Xiaoming Liu, Member, IEEE, Yan Chen, Hao Pang, Xiaoqing Tang, Dan Liu, Qiang Huang, Life Fellow, IEEE and Tatsuo Arai, Life Fellow, IEEE</span><br>
+      <span style="margin-top: 8px; display: inline-block;">
+        <a href="https://ieeexplore.ieee.org/document/10610385/" style="text-decoration: none; background: #f0f2f5; padding: 2px 8px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px;">paper</a>
+        <a href="https://www.bilibili.com/video/BV1am28BRE8e/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f" style="text-decoration: none; background: #f0f2f5; padding: 2px 8px; border-radius: 20px; font-size: 0.85rem;">video</a>
+      </span>
+    </td>
+  </tr>
+</table>
 
-### Related Work
-|||
-|--------|----------|
-|![icra2024](/images/icra2024.png) | **Development of a 3-RRS Micromanipulator Based on Origami-Inspired Spherical Joint**<br>Haoqi Han, Xiaoming Liu, Member, IEEE, Yan Chen, Hao Pang, Xiaoqing Tang, Dan Liu, Qiang Huang, Life Fellow, IEEE and Tatsuo Arai, Life Fellow, IEEE<br>[paper](https://ieeexplore.ieee.org/document/10610385/) [video](https://www.bilibili.com/video/BV1am28BRE8e/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
-|![icra2024](/images/FMAV.png) | **Micro Flapping-Wing Robot** <br>[video](https://www.bilibili.com/video/BV1vr28BfEmt/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
+<!-- 第2条：微型扑翼机器人 -->
+<table style="width: 100%; border-collapse: collapse; margin: 1em 0;">
+  <tr>
+    <td style="width: 240px; vertical-align: top; padding-right: 20px;">
+      <img src="/images/FMAV.png" alt="Micro Flapping-Wing Robot" style="width: 100%; border-radius: 4px;">
+    </td>
+    <td style="vertical-align: top; font-size: 0.95rem; line-height: 1.5; color: #2c3e50;">
+      <strong style="font-size: 1.05rem; color: #1a5d9c;">Micro Flapping-Wing Robot</strong><br>
+      <!-- 无作者信息，直接留空 -->
+      <span style="margin-top: 8px; display: inline-block;">
+        <a href="https://www.bilibili.com/video/BV1vr28BfEmt/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f" style="text-decoration: none; background: #f0f2f5; padding: 2px 8px; border-radius: 20px; font-size: 0.85rem;">video</a>
+      </span>
+    </td>
+  </tr>
+</table>
