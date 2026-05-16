@@ -18,7 +18,7 @@ A dexterous hand requires a high number of active degrees of freedom, independen
 ### Related Work
 |||
 |--------|----------|
-|<div style="width:220px">![tmech2026](/images/tmech2026.png)</div> | **Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
+|<img src="/images/tmech2026.png" alt="tmech2026" width="220"> | **Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Haoqi Han, Yi Yang, Yifei Yu, Yixuan Zhou, Xiaohan Zhu, Hesheng Wang, Senior Member, IEEE<br>[paper](https://doi.org/10.48550/arXiv.2512.04399) [video](https://www.bilibili.com/video/BV13v2YBhE8s/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
 
 Humanoid Robots
 ======
@@ -29,7 +29,7 @@ The humanoid system involves mechanisms, motor systems, and communication system
 ### Related Work
 |||
 |--------|----------|
-|<div style="width:220px">![humanoid](/images/humanoid.png)</div> |  |
+|![humanoid](/images/humanoid.png) | We are refining the approach. |
 
 Micro Robots
 ======
@@ -40,5 +40,5 @@ We use carbon fiber and polyimide to construct microrobot mechanisms, and rely o
 ### Related Work
 |||
 |--------|----------|
-|<div style="width:220px">![icra2024](/images/icra2024.png)</div> | **Development of a 3-RRS Micromanipulator Based on Origami-Inspired Spherical Joint**<br>Haoqi Han, Xiaoming Liu, Member, IEEE, Yan Chen, Hao Pang, Xiaoqing Tang, Dan Liu, Qiang Huang, Life Fellow, IEEE and Tatsuo Arai, Life Fellow, IEEE<br>[paper](https://ieeexplore.ieee.org/document/10610385/) [video](https://www.bilibili.com/video/BV1am28BRE8e/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
-|<div style="width:220px">![icra2024](/images/FMAV.png)</div> | **Micro Flapping-Wing Robot** <br>[video](https://www.bilibili.com/video/BV1vr28BfEmt/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
+|![icra2024](/images/icra2024.png) | **Development of a 3-RRS Micromanipulator Based on Origami-Inspired Spherical Joint**<br>Haoqi Han, Xiaoming Liu, Member, IEEE, Yan Chen, Hao Pang, Xiaoqing Tang, Dan Liu, Qiang Huang, Life Fellow, IEEE and Tatsuo Arai, Life Fellow, IEEE<br>[paper](https://ieeexplore.ieee.org/document/10610385/) [video](https://www.bilibili.com/video/BV1am28BRE8e/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
+|![icra2024](/images/FMAV.png) | **Micro Flapping-Wing Robot** <br>[video](https://www.bilibili.com/video/BV1vr28BfEmt/?share_source=copy_web&vd_source=19f56f3188085b318257d162c3bcde6f)|
