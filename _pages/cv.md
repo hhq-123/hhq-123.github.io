@@ -13,23 +13,6 @@ Education
 ======
 * Ph.D in School of Automation and Intelligent Sensing， Shanghai Jiao Tong University, 2022 (expected)
 * B.S. in School of Mechatronical Engineering， Beijing Institute of Technology, 2018
-  
-Skills
-======
-* Advanced Actuation Technologies
-  * Quasi-direct drive reduction motor systems, Piezoelectric actuators
-
-* Robotic Mechanism Design & Kinematics
-  * Humanoid robots. Dexterous hands, Flapping-wing robots, Parallel robots
-
-* Multimodal Perception & Force/Tactile Sensing
-  * Tactile sensors, Tension sensors
-
-* Embedded Control Architectures
-  * FOC controller development, Robot controllers
-
-* Manipulation Control & Motion Planning Algorithms
-  * Dexterous hand manipulation
 
 Publications
 ======
@@ -52,3 +35,21 @@ Teaching
 Service and leadership
 ======
 * Currently signed in to 43 different slack teams
+
+
+Skills
+======
+* Advanced Actuation Technologies
+  * Quasi-direct drive reduction motor systems, Piezoelectric actuators
+
+* Robotic Mechanism Design & Kinematics
+  * Humanoid robots. Dexterous hands, Flapping-wing robots, Parallel robots
+
+* Multimodal Perception & Force/Tactile Sensing
+  * Tactile sensors, Tension sensors
+
+* Embedded Control Architectures
+  * FOC controller development, Robot controllers
+
+* Manipulation Control & Motion Planning Algorithms
+  * Dexterous hand manipulation

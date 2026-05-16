@@ -1,16 +1,29 @@
 ---
 permalink: /
-title: "Academic Pages is a ready-to-fork GitHub Pages template for academic personal websites"
+title: "About"
 author_profile: true
 redirect_from: 
   - /about/
   - /about.html
 ---
 
-This is the front page of a website that is powered by the [Academic Pages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the repository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. Incidentally, these same features make it a great template for anyone that needs to show off a professional template!
+I am a mechatronics engineer and a PhD candidate in the research group of Prof. Hesheng Wang at Shanghai Jiao Tong University. My research lies at the intersection of piezoelectric robots, dexterous hands, humanoid robots, and robot motion control. My PhD work focuses on addressing industrial challenges in robotics through integrated hardware and control solutions. I received my Bachelor's degree from Beijing Institute of Technology, where I was advised by Prof. Tatsuo Arai and Prof. Xiaoming Liu. I will devote myself to the embodied AI industry, aiming to solve industrial application challenges from both hardware and control perspectives.
+<!-- 我是一名全栈机电工程师，目前在上海交通大学王贺升教授团队攻读博士学位。我的研究聚焦于压电机器人、灵巧手、人形机器人与机器人运动控制。我的博士工作致力于从硬件与控制层面综合解决机器人在工业应用中的挑战。我本科毕业于北京理工大学，师从新井健生教授和刘晓明教授。未来我将投身具身智能行业，推动机器人技术在实际工业场景中的落地。 -->
 
- You can fork [this template](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and Markdown files, add your own PDFs and other content, and have your own site for free, with no ads!
+Dexterous Hands
+======
+A dexterous hand requires a high number of active degrees of freedom, independent joint torque sensing, and compact size. In our most recent work, we have innovatively integrated a miniature force sensing system, which enables compliant interaction, finger‑like dimensions and active DoFs comparable to those of a human finger, and a large gripping force output.
+<!-- 灵巧手应具有丰富的主动自由度、独立的关节力矩感知以及足够小巧的尺寸。我们在最新的工作中创新的引入微型力感知系统，具备柔顺交互、现近人手指相似的尺寸与主动自由度、巨大握力输出等特性。 -->
 
+
+### Related Work
+
+| 预览图 | 论文信息 |
+|--------|----------|
+|  | **Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation**<br>Han, H., Yang, Y., Yu, Y., Zhou, Y., Zhu, X., & Wang, H.<br>*arXiv:2512.04399, 2025*<br><br>[📄 Paper](https://doi.org/10.48550/arXiv.2512.04399) &nbsp;&nbsp; [💻 Code]() &nbsp;&nbsp; [🌐 Website]() &nbsp;&nbsp; [💬 Summary]() |
+
+Han, H., Yang, Y., Yu, Y., Zhou, Y., Zhu, X., & Wang, H. (2025, December 4). *Development of a 15-Degree-of-Freedom Bionic Hand with Cable-Driven Transmission and Distributed Actuation*. arXiv. https://doi.org/10.48550/arXiv.2512.04399
+<!-- 
 A data-driven personal website
 ======
 Like many other Jekyll-based GitHub Pages templates, Academic Pages makes you separate the website's content from its form. The content & metadata of your website are in structured Markdown files, while various other files constitute the theme, specifying how to transform that content & metadata into HTML pages. You keep these various Markdown (.md), YAML (.yml), HTML, and CSS files in a public GitHub repository. Each time you commit and push an update to the repository, the [GitHub pages](https://pages.github.com/) service creates static HTML pages based on these files, which are hosted on GitHub's servers free of charge.
@@ -53,4 +66,4 @@ Example: editing a Markdown file for a talk
 
 For more info
 ------
-More info about configuring Academic Pages can be found in [the guide](https://academicpages.github.io/markdown/), the [growing wiki](https://github.com/academicpages/academicpages.github.io/wiki), and you can always [ask a question on GitHub](https://github.com/academicpages/academicpages.github.io/discussions). The [guides for the Minimal Mistakes theme](https://mmistakes.github.io/minimal-mistakes/docs/configuration/) (which this theme was forked from) might also be helpful.
+More info about configuring Academic Pages can be found in [the guide](https://academicpages.github.io/markdown/), the [growing wiki](https://github.com/academicpages/academicpages.github.io/wiki), and you can always [ask a question on GitHub](https://github.com/academicpages/academicpages.github.io/discussions). The [guides for the Minimal Mistakes theme](https://mmistakes.github.io/minimal-mistakes/docs/configuration/) (which this theme was forked from) might also be helpful. -->
